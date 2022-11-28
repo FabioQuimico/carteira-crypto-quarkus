@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 
+import br.com.fiap.carteiracryptos.dto.ClienteDTO;
 import br.com.fiap.carteiracryptos.model.Cliente;
 import br.com.fiap.carteiracryptos.repository.ClienteRepository;
 
@@ -25,24 +26,29 @@ public class ClienteService {
       }
    }
 
-   public Cliente buscarCliente(Long id) throws SQLException{
-      try {
-         return respository.buscarCliente(id);
-      } catch (NoResultException e) {
-         System.out.println("O cliente procurado nao existe!");
-         return null;
-      } catch (SQLException e) {
-         System.out.println("Erro na busca SQL");
-         e.printStackTrace();
-         throw new SQLException(e);
-      }
+   public Cliente buscarCliente(Long id){
+      return respository.find("id", id).singleResult();
+      // try {
+      //    return respository.buscarCliente(id);
+      // } catch (NoResultException e) {
+      //    System.out.println("O cliente procurado nao existe!");
+      //    return null;
+      // } catch (SQLException e) {
+      //    System.out.println("Erro na busca SQL");
+      //    e.printStackTrace();
+      //    throw new SQLException(e);
+      // }
    }
 
-   public Cliente inserirCliente(Cliente cliente){
-
+   @Transactional
+   public Cliente inserirCliente(ClienteDTO clienteDTO){
+      Cliente cliente = new Cliente();
+      cliente.setId(respository.count() +1);
+      cliente.setNome(clienteDTO.getNome());
+      // System.out.println("*** Service inserindo: " +cliente);
+      // respository.persist(cliente);
+      // return cliente;
       try {
-         // System.out.println("Service inserindo: " +cliente);
-         cliente.setId(respository.count() +1);
          return respository.inserirCliente(cliente);
       } catch (Exception e) {
          System.out.println("O cliente não pôde ser inserido!");

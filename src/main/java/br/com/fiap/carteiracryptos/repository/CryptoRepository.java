@@ -35,7 +35,7 @@ public class CryptoRepository implements PanacheRepository<Crypto> {
       }
    }
 
-   public Crypto buscarCrypto(String codigo) throws SQLException {
+   public Crypto buscaCrypto(String codigo) throws SQLException {
 
       TypedQuery<Crypto> query = em.createNamedQuery("BUSCAR_CRYPTO", Crypto.class);
       query.setParameter("codigo", codigo);

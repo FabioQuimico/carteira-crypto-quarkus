@@ -7,13 +7,13 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 
 import java.sql.SQLException;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -51,7 +51,7 @@ public class CryptoController {
       }
    )
    public Response listarCryptos() {
-      return Response.status(Response.Status.OK).entity(service.listarCryptos()).build();
+      return Response.status(Response.Status.OK).entity(service.listaCryptos()).build();
    }   
    
    @GET
@@ -72,7 +72,28 @@ public class CryptoController {
       }
    )
    public Response buscarCrypto(@PathParam("codigo") String codigo) throws SQLException {
-      return Response.status(Response.Status.OK).entity(service.buscarCrypto(codigo)).build();
+      return Response.status(Response.Status.OK).entity(service.buscaCrypto(codigo)).build();
+   }   
+   
+   @POST
+   @Path("")
+   @Operation(
+      summary = "Inserir Crypto",
+      description = "Insere a Crypto informada (json) na base de dados")
+   @APIResponse(
+      responseCode = "201", 
+      description = "Crypto inserida", 
+      content = {
+         @Content(
+            mediaType = "application/json", 
+            schema = @Schema(
+               implementation = Crypto.class
+            )
+         )
+      }
+   )
+   public Response inserirCrypto(@RequestBody Crypto crypto){
+      return Response.status(Response.Status.CREATED).entity(service.insereCrypto(crypto)).build();
    }   
    
 }

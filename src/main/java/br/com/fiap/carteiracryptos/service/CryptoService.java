@@ -1,10 +1,10 @@
 package br.com.fiap.carteiracryptos.service;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import br.com.fiap.carteiracryptos.model.Crypto;
 import br.com.fiap.carteiracryptos.repository.CryptoRepository;
@@ -14,7 +14,7 @@ public class CryptoService {
    
    @Inject CryptoRepository repository;
 
-   public List<Crypto> listarCryptos() {
+   public List<Crypto> listaCryptos() {
       return repository.findAll().list();
       // try {
       //    return repository.listarCryptos();
@@ -25,24 +25,28 @@ public class CryptoService {
       // }
    }
 
-   public Crypto buscarCrypto(String codigo){
+   public Crypto buscaCrypto(String codigo){
       try {
-         return repository.buscarCrypto(codigo.toUpperCase());
+         return repository.buscaCrypto(codigo.toUpperCase());
       } catch (Exception e) {
          System.out.println("Crypto não pôde ser encontrada!");
          return null;
       }
    }
 
-   public Crypto inseriCrypto(Crypto crypto){
-      try {
-         crypto.setCodigo(crypto.getCodigo().toUpperCase());
-         return repository.inseriCrypto(crypto);
-      } catch (SQLException e) {
-         System.out.println("Crypto não pôde ser insereida!");
-         e.printStackTrace();
-         return null;
-      }
+   @Transactional
+   public Crypto insereCrypto(Crypto crypto){
+      
+      crypto.setCodigo(crypto.getCodigo().toUpperCase());
+      repository.persist(crypto);
+      return crypto;
+      // try {
+      //    return repository.inseriCrypto(crypto);
+      // } catch (SQLException e) {
+      //    System.out.println("Crypto não pôde ser inserida!");
+      //    e.printStackTrace();
+      //    return null;
+      // }
    }
    // TODO: UPDATE
    // TODO: DELETE

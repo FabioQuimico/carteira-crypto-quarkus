@@ -1,14 +1,18 @@
 package br.com.fiap.carteiracryptos.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.FetchType;
 import javax.persistence.NamedNativeQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
@@ -50,6 +54,14 @@ public class Cliente extends PanacheEntity implements Serializable {
    @Column(nullable = false)
    private String nome;
 
+   @OneToMany(
+      mappedBy = "cliente",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL
+   )
+   @JsonManagedReference
+   private Set<CryptoCliente> cryptos = new HashSet<CryptoCliente>();
+
    //Construtores
    public Cliente(){};
    public Cliente(Long id, String nome){
@@ -69,6 +81,14 @@ public class Cliente extends PanacheEntity implements Serializable {
    }
    public void setNome(String nome) {
       this.nome = nome;
+   }
+
+   public CryptoCliente buscaCrypto(String codigo) {
+      for (CryptoCliente crypto : cryptos) {
+         if (crypto.getCrypto().getCodigo().equalsIgnoreCase(codigo))
+            return crypto;
+      }
+      return null;
    }
 
    @Override

@@ -1,10 +1,7 @@
 package br.com.fiap.carteiracryptos.controller;
 
-import java.sql.SQLException;
-
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -18,8 +15,10 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 
+import br.com.fiap.carteiracryptos.dto.ClienteDTO;
 import br.com.fiap.carteiracryptos.model.Cliente;
 import br.com.fiap.carteiracryptos.service.ClienteService;
 
@@ -60,7 +59,7 @@ public class ClienteController {
       summary = "Busca um Cliente pelo Id",
       description = "Retorna o cliente que possui o Id informado")
    @APIResponse(
-      responseCode = "200", 
+      responseCode = "302", 
       description = "Cliente recuperado", 
       content = {
          @Content(
@@ -71,7 +70,7 @@ public class ClienteController {
          )
       }
    )
-   public Response buscarCliente(@PathParam("id") Long id) throws SQLException{
+   public Response buscarCliente(@PathParam("id") Long id){
 
       return Response.status(Response.Status.FOUND).entity(service.buscarCliente(id)).build();
    }
@@ -79,7 +78,7 @@ public class ClienteController {
    @POST
    @Path("")
    @Operation(
-      summary = "Insere um Cliente na base de dados",
+      summary = "Inserir Cliente",
       description = "Insere o cliente informado no formato JSON")
    @APIResponse(
       responseCode = "201", 
@@ -94,8 +93,8 @@ public class ClienteController {
          )
       }
    )
-   public Response inserirCliente(Cliente cliente){
-      return Response.status(Response.Status.CREATED).entity(service.inserirCliente(cliente)).build();
+   public Response inserirCliente(@RequestBody ClienteDTO clienteDTO){
+      return Response.status(Response.Status.CREATED).entity(service.inserirCliente(clienteDTO)).build();
    }
 
    // TODO: ATUALIZAR
