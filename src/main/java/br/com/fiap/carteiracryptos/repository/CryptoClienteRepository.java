@@ -23,7 +23,7 @@ public class CryptoClienteRepository implements PanacheRepository<CryptoCliente>
       TypedQuery<CryptoCliente> query = em.createNamedQuery("BUSCA_CRYPTO_CLIENTE", CryptoCliente.class);
       query.setParameter("idCliente", idCliente);
 
-         try {
+      try {
          return query.getResultList();
       } catch (NoResultException e) {
          System.out.println("Lista de cryptos vazia!");

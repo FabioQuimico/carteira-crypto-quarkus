@@ -19,7 +19,9 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 
 import br.com.fiap.carteiracryptos.dto.ClienteDTO;
+import br.com.fiap.carteiracryptos.dto.CryptoClienteDTO;
 import br.com.fiap.carteiracryptos.model.Cliente;
+import br.com.fiap.carteiracryptos.model.CryptoCliente;
 import br.com.fiap.carteiracryptos.service.ClienteService;
 
 @RequestScoped
@@ -41,11 +43,7 @@ public class ClienteController {
       description = "Lista de clientes recuperada", 
       content = {
          @Content(
-            mediaType = "application/json", 
-            schema = @Schema(
-               implementation = Cliente.class, 
-               type = SchemaType.ARRAY
-            )
+            mediaType = "application/json"
          )
       }
    )
@@ -65,7 +63,7 @@ public class ClienteController {
          @Content(
             mediaType = "application/json", 
             schema = @Schema(
-               implementation = Cliente.class
+               implementation = Integer.class
             )
          )
       }
@@ -87,7 +85,7 @@ public class ClienteController {
          @Content(
             mediaType = "application/json", 
             schema = @Schema(
-               implementation = Cliente.class,
+               implementation = ClienteDTO.class,
                type = SchemaType.ARRAY
             )
          )
@@ -99,4 +97,26 @@ public class ClienteController {
 
    // TODO: ATUALIZAR
    // TODO: EXCLUIR
+
+   @POST
+   @Path("/compra")
+   @Operation(
+      summary = "Compra Crypto para um Cliente",
+      description = "Efetua a compra de uma crypto para um cliente informado no formato JSON")
+   @APIResponse(
+      responseCode = "201", 
+      description = "Compra realizada", 
+      content = {
+         @Content(
+            mediaType = "application/json", 
+            schema = @Schema(
+               implementation = CryptoClienteDTO.class
+            )
+         )
+      }
+   )
+   public Response compraCrypto(@RequestBody CryptoClienteDTO cryptoClienteDTO) throws Exception{
+      System.out.println("CONTROLLER COMPRA: Tentando efetuar compra");
+      return Response.status(Response.Status.CREATED).entity(service.compraCrypto(cryptoClienteDTO)).build();
+   }
 }

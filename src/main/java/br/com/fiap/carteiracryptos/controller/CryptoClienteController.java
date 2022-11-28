@@ -68,7 +68,7 @@ public class CryptoClienteController {
          @Content(
             mediaType = "application/json", 
             schema = @Schema(
-               implementation = CryptoCliente.class, 
+               implementation = Integer.class, 
                type = SchemaType.ARRAY
             )
          )
@@ -90,7 +90,7 @@ public class CryptoClienteController {
          @Content(
             mediaType = "application/json", 
             schema = @Schema(
-               implementation = CryptoCliente.class
+               implementation = CryptoClienteDTO.class
             )
          )
       }

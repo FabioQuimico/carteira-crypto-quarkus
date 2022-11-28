@@ -29,12 +29,13 @@ public class CryptoClienteService {
    }
 
    public List<CryptoCliente> buscaCryptoCliente(Long idCliente){
-      try {
-         return repository.buscaCryptoCliente(idCliente);
-      } catch (Exception e) {
-         System.out.println("O cliente não possui cryptos!");
-         return null;
-      }
+      return repository.find("idCliente", idCliente).list();
+      // try {
+      //    return repository.buscaCryptoCliente(idCliente);
+      // } catch (Exception e) {
+      //    System.out.println("*** O cliente não possui cryptos! ***");
+      //    return null;
+      // }
    }
 
    @Transactional
@@ -47,5 +48,12 @@ public class CryptoClienteService {
       repository.persist(cc);
       // cryptoCliente.persist();
       return cc;
+   }
+
+   @Transactional
+   public CryptoCliente saveCryptoCliente(CryptoCliente cryptoCliente){
+      System.out.println("CCService - fazendo update de " +cryptoCliente.getQuantidade()+ " e " +cryptoCliente.getId());
+      repository.update("quantidade = ?1 where id = ?2", cryptoCliente.getQuantidade(), cryptoCliente.getId()); 
+      return cryptoCliente;
    }
 }

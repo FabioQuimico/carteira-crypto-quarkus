@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import br.com.fiap.carteiracryptos.dto.CryptoClienteDTO;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
 @Entity
@@ -36,6 +37,9 @@ public class CryptoCliente extends PanacheEntity {
 
    public CryptoCliente(){}
 
+   public Long getId(){
+      return this.id;
+   }
    public Cliente getCliente() {
       return cliente;
    }
@@ -60,7 +64,11 @@ public class CryptoCliente extends PanacheEntity {
       this.quantidade = quantidade;
    };
 
-
-   
-
+   public CryptoClienteDTO toDTO(){
+      CryptoClienteDTO ccDTO = new CryptoClienteDTO();
+      ccDTO.setCodigoCrypto(this.crypto.getCodigo());
+      ccDTO.setIdCliente(this.cliente.getId());
+      ccDTO.setQuantidade(this.quantidade);
+      return ccDTO;
+   }
 }

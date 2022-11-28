@@ -93,7 +93,6 @@ public class Cliente extends PanacheEntity implements Serializable {
 
    @Override
    public String toString() {
-      // System.out.println("ID: " +id+ " - Nome: " +nome);
       return ("ID: " +id+ " - Nome: " +nome);
    }
 }
