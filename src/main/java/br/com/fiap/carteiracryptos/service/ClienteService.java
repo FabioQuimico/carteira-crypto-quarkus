@@ -1,5 +1,6 @@
 package br.com.fiap.carteiracryptos.service;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -13,7 +14,6 @@ import br.com.fiap.carteiracryptos.model.Cliente;
 import br.com.fiap.carteiracryptos.model.Crypto;
 import br.com.fiap.carteiracryptos.model.CryptoCliente;
 import br.com.fiap.carteiracryptos.repository.ClienteRepository;
-import br.com.fiap.carteiracryptos.repository.CryptoClienteRepository;
 
 @RequestScoped
 public class ClienteService {
@@ -67,10 +67,10 @@ public class ClienteService {
 //TODO: Atualizar cliente
 //TODO: Excluir cliente
 
+   @Transactional
    public CryptoClienteDTO compraCrypto(CryptoClienteDTO compra) throws Exception {
 
       Cliente cliente = repository.buscarCliente(compra.getIdCliente());
-      System.out.println("COMPRA: Cliente encontrado: " +cliente.getNome());
 
       // Verifica se o cliente ja possui daquela crypto
       CryptoCliente cryptoPossuida = cliente.buscaCrypto(compra.getCodigoCrypto());
@@ -86,25 +86,47 @@ public class ClienteService {
          // Verifica se a criptomoeda já existe na base
          Crypto crypto = cService.buscaCrypto(compra.getCodigoCrypto());
 
-         if (crypto == null) {
-            try {
-            //TODO:   aService.atualizaCryptos();
-               System.out.println("*** AGUARDE ATUALIZANDO BASE DE CRIPTOMOEDAS... ***");
-            } catch (Exception e) {
-               System.out.println("*** NÃO FOI POSSIVEL ATUALIZAR A BASE, USANDO DADOS LOCAIS ***");
-            }
-            crypto = cService.buscaCrypto(compra.getCodigoCrypto());
+         if (crypto != null) {
+            // try {
+            // //TODO:   aService.atualizaCryptos();
+            //    System.out.println("*** AGUARDE ATUALIZANDO BASE DE CRIPTOMOEDAS... ***");
+            // } catch (Exception e) {
+            //    System.out.println("*** NÃO FOI POSSIVEL ATUALIZAR A BASE, USANDO DADOS LOCAIS ***");
+            // }
+            // crypto = cService.buscaCrypto(compra.getCodigoCrypto());
             // Tenta novamente com a base atualizada
-            if (crypto == null) {
-               throw new Exception("*** Criptomoeda não existe na base de dados ***");
-      //       }
+            return ccService.insereCryptoCliente(compra).toDTO();
          } else {
-            cryptoCliente.setCrypto(crypto);
-            cryptoCliente.setQuantidade(compra.getQuantidade());
+            throw new Exception("*** Criptomoeda não existe na base de dados ***");
          }
-         return ccService.saveCryptoCliente(cryptoCliente).toDTO();
-         }
-      return cryptoCliente.toDTO();
       }
+   }
+
+   @Transactional
+   public CryptoClienteDTO vendeCrypto(CryptoClienteDTO venda) throws Exception {
+
+      Cliente cliente = repository.buscarCliente(venda.getIdCliente());
+      CryptoCliente cryptoPossuida = cliente.buscaCrypto(venda.getCodigoCrypto());
+
+      if (cryptoPossuida != null) {
+         System.out.println("Service: preparando para vender " +cryptoPossuida);
+         if (venda.getQuantidade().compareTo(cryptoPossuida.getQuantidade()) <= 0) {
+            System.out.println("Calculando nova quantidade");
+            cryptoPossuida.setQuantidade(cryptoPossuida.getQuantidade().subtract(venda.getQuantidade()));
+            System.out.println("Service: Nova quantidade calculada, salvando...");
+            ccService.saveCryptoCliente(cryptoPossuida);
+            System.out.println("Service: salvo");
+            if (cryptoPossuida.getQuantidade().compareTo(BigDecimal.ZERO) == 0){
+               System.out.println("*** TENTANDO APAGAR A CRIPTO DO CLIENTE ***");
+               ccService.deletaCryptoCliente(cryptoPossuida);
+            }
+         } else {
+            throw new Exception("*** Cliente não possui essa quantidade da criptomoeda! ***");   
+         }
+      } else {
+         throw new Exception("*** Cliente não possui essa criptomoeda ***");
+      }
+      return cryptoPossuida.toDTO();
+      // return cliente.buscaCrypto(venda.getCodigo());
    }
 }

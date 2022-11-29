@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -104,7 +105,7 @@ public class ClienteController {
       summary = "Compra Crypto para um Cliente",
       description = "Efetua a compra de uma crypto para um cliente informado no formato JSON")
    @APIResponse(
-      responseCode = "201", 
+      responseCode = "202", 
       description = "Compra realizada", 
       content = {
          @Content(
@@ -116,7 +117,27 @@ public class ClienteController {
       }
    )
    public Response compraCrypto(@RequestBody CryptoClienteDTO cryptoClienteDTO) throws Exception{
-      System.out.println("CONTROLLER COMPRA: Tentando efetuar compra");
-      return Response.status(Response.Status.CREATED).entity(service.compraCrypto(cryptoClienteDTO)).build();
+      return Response.status(Response.Status.ACCEPTED).entity(service.compraCrypto(cryptoClienteDTO)).build();
+   }
+
+   @POST
+   @Path("/venda")
+   @Operation(
+      summary = "Vende Crypto de um Cliente",
+      description = "Efetua a venda de uma crypto de um cliente informado no formato JSON")
+   @APIResponse(
+      responseCode = "202", 
+      description = "Venda realizada", 
+      content = {
+         @Content(
+            mediaType = "application/json", 
+            schema = @Schema(
+               implementation = CryptoClienteDTO.class
+            )
+         )
+      }
+   )
+   public Response vendeCrypto(@RequestBody CryptoClienteDTO cryptoClienteDTO) throws Exception{
+      return Response.status(Response.Status.ACCEPTED).entity(service.vendeCrypto(cryptoClienteDTO)).build();
    }
 }

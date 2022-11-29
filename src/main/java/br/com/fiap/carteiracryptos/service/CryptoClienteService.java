@@ -52,8 +52,13 @@ public class CryptoClienteService {
 
    @Transactional
    public CryptoCliente saveCryptoCliente(CryptoCliente cryptoCliente){
-      System.out.println("CCService - fazendo update de " +cryptoCliente.getQuantidade()+ " e " +cryptoCliente.getId());
-      repository.update("quantidade = ?1 where id = ?2", cryptoCliente.getQuantidade(), cryptoCliente.getId()); 
+         repository.persist(cryptoCliente); 
+      // repository.update("quantidade = ?1 where id = ?2", cryptoCliente.getQuantidade(), cryptoCliente.getId()); 
       return cryptoCliente;
+   }
+
+   @Transactional
+   public void deletaCryptoCliente(CryptoCliente cryptoCliente){
+      repository.delete(cryptoCliente);
    }
 }

@@ -14,5 +14,7 @@ insert into cryptos(codigo, nome, valorCompra, valorVenda)
 insert into cryptos(codigo, nome, valorCompra, valorVenda) 
    values('USDC', 'USD Coin', 2000.0, 1999.0);
 
-insert into crypto_cliente(id, idCliente, codigoCrypto, quantidade)
-   values(1, 1, 'BTC', 10.0);
+insert into crypto_cliente(idCliente, codigoCrypto, quantidade)
+   values(1, 'BTC', 10.0);
+-- insert into crypto_cliente(id, idCliente, codigoCrypto, quantidade)
+--    values(1, 1, 'BTC', 10.0);
