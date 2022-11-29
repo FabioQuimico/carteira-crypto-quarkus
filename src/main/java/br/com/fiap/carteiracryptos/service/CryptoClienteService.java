@@ -30,6 +30,7 @@ public class CryptoClienteService {
 
    public List<CryptoCliente> buscaCryptoCliente(Long idCliente){
       return repository.find("idCliente", idCliente).list();
+      // Removido para uso de Panache
       // try {
       //    return repository.buscaCryptoCliente(idCliente);
       // } catch (Exception e) {

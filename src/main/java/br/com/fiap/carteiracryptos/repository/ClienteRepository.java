@@ -47,7 +47,18 @@ public class ClienteRepository implements PanacheRepository<Cliente>{
       } catch (PersistenceException e) {
          throw new SQLException(e);
       }
+   }
 
+   public Long ultimoIdCliente() throws SQLException{
+      TypedQuery<Long> query = em.createNamedQuery("ULTIMO_IDCLIENTE", Long.class);
+
+      try {
+         return query.getSingleResult();
+      } catch (NoResultException e) {
+         return null;
+      } catch (PersistenceException e) {
+         throw new SQLException(e);
+      }
    }
 
    // Transactional e´necessário pra fazer o executeUpdate
@@ -67,6 +78,3 @@ public class ClienteRepository implements PanacheRepository<Cliente>{
    }
    
 }
-
-//TODO: Atualizar cliente
-//TODO: Excluir cliente

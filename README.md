@@ -1,63 +1,127 @@
 # carteiracryptos Project
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+## 🎯 Objetivo
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+Sistema de controle de uma carteira de criptomoedas contendo uma base de clientes, criptomoedas, o registro de posse e a possibilidade de transações de compra e venda.
 
-## Running the application in dev mode
+## 🛠️ Recursos utilizados
 
-You can run your application in dev mode that enables live coding using:
+- Java JDK 17
+- Quarkus
+- Hibernate
+- Panache
+- Resteasy-Jackson
+- GitHub
+- OpenAPI - Swagger
+- Banco de dados H2
+
+## 📐 Projeto da aplicação
+
+O sistema foi planejado para ser composto por 3 projetos: o frontend(não incluso aqui) para acesso e autenticação, o motor de execução e controle de transações e persistencia (este projeto) e uma API externa para controle e atualização das criptomoedas existentes no momento com suas cotações.
+
+Este projeto engloba todo controle e manutenção da base de clientes (simplificados, com apenas ID e nome), a base de criptomoedas (com os principais dados para as transações) e a carteira em si que é a vinculação de posse de criptomoedas para cada cliente, conforme abaixo:
+
+**Cliente:** possui identificação númerica(Long) e nome (String)
+
+**Crypto:** possui código único(String), nome(String), valor de Compra(double) e valor de Venda(double)
+
+**CryptoCliente:** possui a id do Cliente(Long), o código da criptomoeda(String) e a quantidade possuida (BigDecimal)
+
+## ⚙️ Executando o projeto
+
+Para execução em modo de desenvolvimento:
+
 ```shell script
 ./mvnw compile quarkus:dev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+A geração do pacote da aplicação pode ser feito com:
 
-## Packaging and running the application
-
-The application can be packaged using:
 ```shell script
 ./mvnw package
 ```
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+> **_NOTA:_**  O Quarkus conta com uma Dev UI que pode ser acessada em http://localhost:8080/q/dev/.
 
-If you want to build an _über-jar_, execute the following command:
-```shell script
-./mvnw package -Dquarkus.package.type=uber-jar
-```
+## 🩺 Testando o projeto
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+Para fins de testes, o banco de dados é alimentado durante a inicilização do projeto com:
 
-## Creating a native executable
+- 4 Clientes (1, 2, 3 e 4)
 
-You can create a native executable using: 
-```shell script
-./mvnw package -Pnative
-```
+- 5 Criptomoedas (BTC, ETH, USDT, ADA, USDC)
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
-```shell script
-./mvnw package -Pnative -Dquarkus.native.container-build=true
-```
+- 1 Posse na carteira (Cliente: 1, Criptomoeda: BTC, quanitdade: 10)
 
-You can then execute your native executable with: `./target/carteiracryptos-1.0.0-SNAPSHOT-runner`
+A interface Swagger pode ser acessada em: http://localhost:8080/q/swagger-ui/
 
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
+### Endpoints
 
-## Related Guides
+#### Entidade CLIENTE
 
-- SmallRye OpenAPI ([guide](https://quarkus.io/guides/openapi-swaggerui)): Document your REST APIs with OpenAPI - comes with Swagger UI
-- RESTEasy Reactive ([guide](https://quarkus.io/guides/resteasy-reactive)): A JAX-RS implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- Cucumber ([guide](https://quarkiverse.github.io/quarkiverse-docs/quarkus-cucumber/dev/index.html)): Run tests using Cucumber
-- JDBC Driver - MySQL ([guide](https://quarkus.io/guides/datasource)): Connect to the MySQL database via JDBC
+- GET /cliente/lista => Retorna toda a lista de clientes
+- GET /cliente/{id} => Retorna o cliente com o id informado em fotmato numerico
+- POST /cliente => Salva um novo clliente na base passado por json com o atributo:
 
-## Provided Code
+  ```json
+  "nome": "{String}"
+  ```
 
-### RESTEasy Reactive
+- PATCH /cliente => Altera o cliente com o id informado por json conforme:
 
-Easily start your Reactive RESTful Web Services
+  ```json
+  "id": {Numero},
+  "nome": "{String}"
+  ```
 
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+- POST /cliente/compra => Efetua a compra da criptomoeda com {codigoCrypto} informado para o cliente de {idCliente} na {quantidade} passada por json conforme:
+
+  ```json
+  "idCliente": {numero},
+  "codigoCrypto": "{String}",
+  "quantidade": {numero decimal}
+  ```
+
+- POST /cliente/venda => Efetua a venda da criptomoeda com {codigoCrypto} para o cliente de {idCliente} na {quantidade} passada por json conforme:
+
+  ```json
+  "idCliente": {numero},
+  "codigoCrypto": "{String}",
+  "quantidade": {numero decimal}
+  ```
+
+#### Entidade CRYPTO
+
+- GET /crypto/lista => Lista todas as criptomoedas disponíveis para compra/venda
+- GET /crypto/{codigo} => Mostra os dados da criptomoeda de codigo string informado
+- POST /crypto => Cadastra uma nova criptomoeda com os dados informados por json conforme:
+
+  ```json
+  "codigo": "{String}",
+  "nome": "{String}",
+  "valorCompra": {numero decimal},
+  "vallorVenda": {numero decimal}
+  ```
+
+- DELETE /crypto/{codigo} => Apaga a criptomoeda com {codigo} informado
+
+#### Entidade CRYPTOCLIENTE
+
+- GET /cryptocliente/lista => Lista todas as propriedades de criptomoedas de todos os usuário **APENAS PARA TESTES**
+- GET /cryptocliente/{idCliente} => Lista todas as criptomoedas possuidas pelo cliente de {idCliente} numerico
+- POST /cryptocliente => Cria uma nova posse de criptomoeda com os dados passados por json conforme:
+
+  ```json
+  "idCliente": {numero},
+  "codigoCrypto": "{String}",
+  "quantidade": {numero decimal}
+  ```
+
+## 👨🏽‍💻 Desenvolvedores
+
+| [<img src="https://avatars.githubusercontent.com/AlexDamiao86" width=115><br><sub>Alexandre Damião Mendonça Maia</sub>](https://github.com/AlexDamiao86) |  [<img src="https://avatars.githubusercontent.com/FabioQuimico" width=115><br><sub>Fabio Ferreira dos Santos</sub>](https://github.com/FabioQuimico) |  [<img src="https://avatars.githubusercontent.com/Gabriel2503" width=115><br><sub>Gabriel Oliveira Barbosa</sub>](https://github.com/Gabriel2503) | [<img src="https://avatars.githubusercontent.com/ferreirabraga" width=115><br><sub>Rafael Braga da Silva Ferreira</sub>](https://github.com/ferreirabraga) | 
+| :---: | :---: | :---: | :---: |
+
+>
+>Projeto realizado como requisito para conclusão da disciplina de _Quarkus_ do MBA Full Stack Development - FIAP 2022
+>

@@ -5,6 +5,7 @@ import br.com.fiap.carteiracryptos.service.CryptoService;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
@@ -15,6 +16,7 @@ import java.sql.SQLException;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -93,7 +95,27 @@ public class CryptoController {
       }
    )
    public Response inserirCrypto(@RequestBody Crypto crypto){
-      return Response.status(Response.Status.CREATED).entity(service.insereCrypto(crypto)).build();
+      return Response.status(Response.Status.CREATED).entity(service.saveCrypto(crypto)).build();
+   }   
+   
+   
+   @DELETE
+   @Path("/{codigo}")
+   @Operation(
+      summary = "Excluir Crypto",
+      description = "Exclui a criptomoeda com o {codigo} informado do repositorio local")
+   @APIResponse(
+      responseCode = "200", 
+      description = "Crypto excluida", 
+      content = {
+         @Content(
+            mediaType = "application/json"
+         )
+      }
+   )
+   public Response excluirCrypto(@PathParam("codigo") String codigo) throws SQLException {
+      service.excluiCrypto(codigo);
+      return Response.status(Response.Status.OK).build();
    }   
    
 }

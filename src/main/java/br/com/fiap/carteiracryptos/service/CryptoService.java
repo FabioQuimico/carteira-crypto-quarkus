@@ -1,5 +1,6 @@
 package br.com.fiap.carteiracryptos.service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
@@ -35,7 +36,7 @@ public class CryptoService {
    }
 
    @Transactional
-   public Crypto insereCrypto(Crypto crypto){
+   public Crypto saveCrypto(Crypto crypto){
       
       crypto.setCodigo(crypto.getCodigo().toUpperCase());
       repository.persist(crypto);
@@ -48,6 +49,11 @@ public class CryptoService {
       //    return null;
       // }
    }
-   // TODO: UPDATE
-   // TODO: DELETE
+
+   @Transactional
+   public void excluiCrypto(String codigo) throws SQLException{
+      
+      repository.delete(repository.buscaCrypto(codigo));
+   }
+
 }

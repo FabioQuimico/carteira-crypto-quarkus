@@ -16,6 +16,9 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import br.com.fiap.carteiracryptos.dto.CryptoClienteDTO;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 
+// Não pode ser usado PanacheEntity por gerar um ID numérico auto-gerenciado
+// para a regra de negocio é preciso que o cliente só tenha um registro de cada
+// criptomoeda então estes devem ser ID
 @Entity
 @Table(name="crypto_cliente")
 @NamedNativeQueries({

@@ -1,11 +1,13 @@
 package br.com.fiap.carteiracryptos.controller;
 
+import java.sql.SQLException;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -20,9 +22,9 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 
 import br.com.fiap.carteiracryptos.dto.ClienteDTO;
+import br.com.fiap.carteiracryptos.dto.ClienteDTOupdate;
 import br.com.fiap.carteiracryptos.dto.CryptoClienteDTO;
 import br.com.fiap.carteiracryptos.model.Cliente;
-import br.com.fiap.carteiracryptos.model.CryptoCliente;
 import br.com.fiap.carteiracryptos.service.ClienteService;
 
 @RequestScoped
@@ -44,7 +46,10 @@ public class ClienteController {
       description = "Lista de clientes recuperada", 
       content = {
          @Content(
-            mediaType = "application/json"
+            mediaType = "application/json",
+            schema = @Schema(
+               implementation = Cliente.class
+            )
          )
       }
    )
@@ -64,7 +69,7 @@ public class ClienteController {
          @Content(
             mediaType = "application/json", 
             schema = @Schema(
-               implementation = Integer.class
+               implementation = Cliente.class
             )
          )
       }
@@ -86,18 +91,37 @@ public class ClienteController {
          @Content(
             mediaType = "application/json", 
             schema = @Schema(
-               implementation = ClienteDTO.class,
+               implementation = Cliente.class,
                type = SchemaType.ARRAY
             )
          )
       }
    )
-   public Response inserirCliente(@RequestBody ClienteDTO clienteDTO){
+   public Response inserirCliente(@RequestBody ClienteDTO clienteDTO) throws SQLException{
       return Response.status(Response.Status.CREATED).entity(service.inserirCliente(clienteDTO)).build();
    }
 
-   // TODO: ATUALIZAR
-   // TODO: EXCLUIR
+   @PATCH
+   @Path("")
+   @Operation(
+      summary = "Atualizar Cliente",
+      description = "Altera o cliente informado no formato JSON")
+   @APIResponse(
+      responseCode = "202", 
+      description = "Cliente Atualizado", 
+      content = {
+         @Content(
+            mediaType = "application/json", 
+            schema = @Schema(
+               implementation = Cliente.class,
+               type = SchemaType.ARRAY
+            )
+         )
+      }
+   )
+   public Response atualizarCliente(@RequestBody ClienteDTOupdate clienteUpdate){
+      return Response.status(Response.Status.CREATED).entity(service.atualizarCliente(clienteUpdate)).build();
+   }
 
    @POST
    @Path("/compra")

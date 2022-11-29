@@ -42,21 +42,22 @@ import javax.persistence.NamedNativeQueries;
    @NamedNativeQuery(
       name = "EXCLUIR_CLIENTE",
       query = "DELETE clientes where id=:idCliente ;"
+
+      ),
+   @NamedNativeQuery(
+      name = "ULTIMO_IDCLIENTE",
+      query = "SELECT MAX(id) FROM clientes ;"
    )
 })
 public class Cliente extends PanacheEntity implements Serializable {
    private static final long serialVersionUID = 1L;
-
-   // @Id
-   // @GeneratedValue(strategy = GenerationType.IDENTITY)
-   // private Long id;
 
    @Column(nullable = false)
    private String nome;
 
    @OneToMany(
       mappedBy = "cliente",
-      fetch = FetchType.LAZY,
+      fetch = FetchType.EAGER,
       cascade = CascadeType.ALL
    )
    @JsonManagedReference

@@ -24,7 +24,7 @@ import br.com.fiap.carteiracryptos.dto.CryptoClienteDTO;
 import br.com.fiap.carteiracryptos.model.CryptoCliente;
 import br.com.fiap.carteiracryptos.service.CryptoClienteService;
 
-
+// Classe com endpoints apenas para testes e verificações
 @RequestScoped
 @Path("/cryptocliente")
 @Produces(MediaType.APPLICATION_JSON)
