@@ -1,4 +1,4 @@
-# carteiracryptos Project
+# Carteira-Cryptos
 
 ## 🎯 Objetivo
 
@@ -13,45 +13,73 @@ Sistema de controle de uma carteira de criptomoedas contendo uma base de cliente
 - Resteasy-Jackson
 - GitHub
 - OpenAPI - Swagger
-- Banco de dados H2
+- Banco de dados H2 / PostgreSQL
 
 ## 📐 Projeto da aplicação
 
-O sistema foi planejado para ser composto por 3 projetos: o frontend(não incluso aqui) para acesso e autenticação, o motor de execução e controle de transações e persistencia (este projeto) e uma API externa para controle e atualização das criptomoedas existentes no momento com suas cotações.
-
 Este projeto engloba todo controle e manutenção da base de clientes (simplificados, com apenas ID e nome), a base de criptomoedas (com os principais dados para as transações) e a carteira em si que é a vinculação de posse de criptomoedas para cada cliente, conforme abaixo:
 
-**Cliente:** possui identificação númerica(Long) e nome (String)
-
-**Crypto:** possui código único(String), nome(String), valor de Compra(double) e valor de Venda(double)
-
-**CryptoCliente:** possui a id do Cliente(Long), o código da criptomoeda(String) e a quantidade possuida (BigDecimal)
+- **Cliente:** possui identificação númerica(Long) e nome (String)
+- **Crypto:** possui código único(String), nome(String), valor de Compra(double) e valor de Venda(double)
+- **CryptoCliente:** possui a id do Cliente(Long), o código da criptomoeda(String) e a quantidade possuida (BigDecimal)
 
 ## ⚙️ Executando o projeto
 
-Para execução em modo de desenvolvimento:
+### Profile Desenvolvimento (H2)
 
-```shell script
+1. Executar aplicação quarkus:
+
+```bash
 ./mvnw compile quarkus:dev
 ```
 
-A geração do pacote da aplicação pode ser feito com:
+> **_NOTA:_**  Neste profile, o banco de dados utilizado será o H2 e será recriado a cada execução. 
 
-```shell script
-./mvnw package
+
+### Profile Produção (PostgreSQL)
+
+1. Com o docker rodando, subir serviço PostgreSQL: 
+
+```bash
+docker-compose up -d
 ```
 
-> **_NOTA:_**  O Quarkus conta com uma Dev UI que pode ser acessada em http://localhost:8080/q/dev/.
+2. Executar aplicação quarkus: 
 
+```bash
+./mvnw compile quarkus:dev -Dquarkus.profile=prod
+```
+
+Opcionalmente, poderá ser configurado o pgAdmin (Administração do PostgreSQL) para visualização dos dados persistidos no banco de dados.
+
+- Acessar página web do pgAdmin:
+  * Endereço: http://localhost:16543
+  * Login/Email: pgadmin@email.com
+  * Login/Password: senha
+
+- Adicionar novo servidor (Add new Server):
+  - (Aba General)
+    * Name: postgres-bd
+  - (Aba Connection)
+    * Host: postgres
+    * Port: 5432
+    * Maintenance database: postgres
+    * Username: postgres
+    * Password: docker
+
+- Acessar tabelas: 
+  * No canto lateral esquerdo, clicar sobre Servers > postgres-bd > Databases > carteira-cryptos > Schemas > public > Tables
+
+  
 ## 🩺 Testando o projeto
 
-Para fins de testes, o banco de dados é alimentado durante a inicilização do projeto com:
+Para facilitar a execução, o banco de dados é alimentado durante a inicialização do projeto com:
 
 - 4 Clientes (1, 2, 3 e 4)
-
 - 5 Criptomoedas (BTC, ETH, USDT, ADA, USDC)
-
 - 1 Posse na carteira (Cliente: 1, Criptomoeda: BTC, quanitdade: 10)
+
+### SWAGGER 
 
 A interface Swagger pode ser acessada em: http://localhost:8080/q/swagger-ui/
 
@@ -59,9 +87,9 @@ A interface Swagger pode ser acessada em: http://localhost:8080/q/swagger-ui/
 
 #### Entidade CLIENTE
 
-- GET /cliente/lista => Retorna toda a lista de clientes
-- GET /cliente/{id} => Retorna o cliente com o id informado em fotmato numerico
-- POST /cliente => Salva um novo clliente na base passado por json com o atributo:
+- GET /cliente/lista => Retorna a lista de clientes
+- GET /cliente/{id} => Retorna o cliente com o id informado em formato numerico
+- POST /cliente => Salva um novo cliente na base passado por json com o atributo:
 
   ```json
   "nome": "{String}"
@@ -74,7 +102,7 @@ A interface Swagger pode ser acessada em: http://localhost:8080/q/swagger-ui/
   "nome": "{String}"
   ```
 
-- POST /cliente/compra => Efetua a compra da criptomoeda com {codigoCrypto} informado para o cliente de {idCliente} na {quantidade} passada por json conforme:
+- POST /cliente/compra => Registra a compra da criptomoeda com {codigoCrypto} informado para o cliente de {idCliente} na {quantidade} passada por json conforme:
 
   ```json
   "idCliente": {numero},
@@ -93,7 +121,7 @@ A interface Swagger pode ser acessada em: http://localhost:8080/q/swagger-ui/
 #### Entidade CRYPTO
 
 - GET /crypto/lista => Lista todas as criptomoedas disponíveis para compra/venda
-- GET /crypto/{codigo} => Mostra os dados da criptomoeda de codigo string informado
+- GET /crypto/{codigo} => Mostra dados da criptomoeda de codigo string informado
 - POST /crypto => Cadastra uma nova criptomoeda com os dados informados por json conforme:
 
   ```json
@@ -107,7 +135,7 @@ A interface Swagger pode ser acessada em: http://localhost:8080/q/swagger-ui/
 
 #### Entidade CRYPTOCLIENTE
 
-- GET /cryptocliente/lista => Lista todas as propriedades de criptomoedas de todos os usuário **APENAS PARA TESTES**
+- GET /cryptocliente/lista => Lista todas as propriedades de criptomoedas de todos os usuários **APENAS PARA TESTES**
 - GET /cryptocliente/{idCliente} => Lista todas as criptomoedas possuidas pelo cliente de {idCliente} numerico
 - POST /cryptocliente => Cria uma nova posse de criptomoeda com os dados passados por json conforme:
 

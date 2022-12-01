@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:15.1
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "docker"
+      POSTGRES_DB: "carteira-cryptos"
+    ports:
+      - "15432:5432"
+    volumes:
+      - ~/fiap/carteira-cryptos/PostgreSQL:/var/lib/postgresql/data
+    networks:
+      - postgres-network
+
+  pgadmin:
+    image: dpage/pgadmin4:6.16
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'pgadmin@email.com'
+      PGADMIN_DEFAULT_PASSWORD: 'senha'
+    ports:
+      - "16543:80"
+    depends_on:
+      - postgres
+    networks:
+      - postgres-network
+
+networks:
+  postgres-network:
+    driver: bridge
