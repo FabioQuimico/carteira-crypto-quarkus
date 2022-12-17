@@ -11,7 +11,6 @@ import br.com.fiap.carteiracryptos.dto.CryptoClienteDTO;
 import br.com.fiap.carteiracryptos.model.CryptoCliente;
 import br.com.fiap.carteiracryptos.repository.ClienteRepository;
 import br.com.fiap.carteiracryptos.repository.CryptoClienteRepository;
-import br.com.fiap.carteiracryptos.repository.CryptoRepository;
 
 @RequestScoped
 public class CryptoClienteService {
@@ -20,8 +19,6 @@ public class CryptoClienteService {
    CryptoClienteRepository repository;
    @Inject
    ClienteRepository clienteRepository;
-   @Inject
-   CryptoRepository cryptoRepository;
 
 
    public List<CryptoCliente> listaCryptoClientes(){
@@ -35,12 +32,9 @@ public class CryptoClienteService {
    @Transactional
    public CryptoCliente insereCryptoCliente(CryptoClienteDTO dto) throws SQLException{
 
-      CryptoCliente cc = new CryptoCliente();
+      CryptoCliente cc = new CryptoCliente(dto.getCodigoCrypto(),dto.getQuantidade());
       cc.setCliente(clienteRepository.buscarCliente(dto.getIdCliente()));
-      cc.setCrypto(cryptoRepository.buscaCrypto(dto.getCodigoCrypto()));
-      cc.setQuantidade(dto.getQuantidade());
       repository.persist(cc);
-      // cryptoCliente.persist();
       return cc;
    }
 

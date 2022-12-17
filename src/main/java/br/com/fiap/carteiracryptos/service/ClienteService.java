@@ -13,7 +13,6 @@ import br.com.fiap.carteiracryptos.dto.ClienteDTO;
 import br.com.fiap.carteiracryptos.dto.ClienteDTOupdate;
 import br.com.fiap.carteiracryptos.dto.CryptoClienteDTO;
 import br.com.fiap.carteiracryptos.model.Cliente;
-import br.com.fiap.carteiracryptos.model.Crypto;
 import br.com.fiap.carteiracryptos.model.CryptoCliente;
 import br.com.fiap.carteiracryptos.repository.ClienteRepository;
 
@@ -23,8 +22,6 @@ public class ClienteService {
    ClienteRepository repository;
    @Inject
    CryptoClienteService ccService;
-   @Inject
-   CryptoService cService;
 
    public List<Cliente> listarClientes(){
       try {
@@ -37,16 +34,6 @@ public class ClienteService {
 
    public Cliente buscarCliente(Long id){
       return repository.find("id", id).singleResult();
-      // try {
-      //    return repository.buscarCliente(id);
-      // } catch (NoResultException e) {
-      //    System.out.println("O cliente procurado nao existe!");
-      //    return null;
-      // } catch (SQLException e) {
-      //    System.out.println("Erro na busca SQL");
-      //    e.printStackTrace();
-      //    throw new SQLException(e);
-      // }
    }
 
    @Transactional
@@ -54,7 +41,6 @@ public class ClienteService {
       Cliente cliente = new Cliente();
       cliente.setId(repository.count() +1);
       cliente.setNome(clienteDTO.getNome());
-      // System.out.println("*** Service inserindo: " +cliente);
       // repository.persist(cliente);
       // return cliente;
       try {
@@ -92,6 +78,7 @@ public class ClienteService {
 
 
 
+   //* Transações com as criptomoedas do cliente */
    @Transactional
    public CryptoClienteDTO compraCrypto(CryptoClienteDTO compra) throws Exception {
 
@@ -100,22 +87,14 @@ public class ClienteService {
       // Verifica se o cliente ja possui daquela crypto
       CryptoCliente cryptoPossuida = cliente.buscaCrypto(compra.getCodigoCrypto());
       if (cryptoPossuida != null) {
-         // System.out.println(" *** O CLIENTE JÁ POSSUI ESSA CRYPTO ***");
+         //TODO: Testar e remover comentário
+         System.out.println(" *** O CLIENTE JÁ POSSUI ESSA CRYPTO ***");
          cryptoPossuida.setQuantidade(cryptoPossuida.getQuantidade().add(compra.getQuantidade()));
          return ccService.saveCryptoCliente(cryptoPossuida).toDTO();
       } else {
-         // System.out.println(" *** O CLIENTE NÃO POSSUIA ESSA CRYPTO ***");
-         CryptoCliente cryptoCliente = new CryptoCliente();
-         cryptoCliente.setCliente(cliente);
-
-         // Verifica se a criptomoeda já existe na base
-         Crypto crypto = cService.buscaCrypto(compra.getCodigoCrypto());
-
-         if (crypto != null) {
-            return ccService.insereCryptoCliente(compra).toDTO();
-         } else {
-            throw new Exception("*** Criptomoeda não existe na base de dados ***");
-         }
+         //TODO: Testar e remover comentário
+         System.out.println(" *** O CLIENTE NÃO POSSUIA ESSA CRYPTO ***");
+         return ccService.insereCryptoCliente(compra).toDTO();
       }
    }
 

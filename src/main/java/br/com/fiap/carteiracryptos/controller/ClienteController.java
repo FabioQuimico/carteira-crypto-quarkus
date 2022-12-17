@@ -1,15 +1,13 @@
 package br.com.fiap.carteiracryptos.controller;
 
 import java.sql.SQLException;
-import java.util.List;
-
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.persistence.Id;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -28,8 +26,7 @@ import br.com.fiap.carteiracryptos.dto.ClienteDTOupdate;
 import br.com.fiap.carteiracryptos.dto.CryptoClienteDTO;
 import br.com.fiap.carteiracryptos.model.Cliente;
 import br.com.fiap.carteiracryptos.service.ClienteService;
-import io.quarkus.panache.common.Sort;
-import io.smallrye.mutiny.Uni;
+import br.com.fiap.carteiracryptos.service.CryptoClienteService;
 
 @RequestScoped
 @Path("/cliente")
@@ -39,6 +36,9 @@ public class ClienteController {
    
    @Inject
    ClienteService service;
+   @Inject
+   CryptoClienteService ccService;
+
 
    @GET
    @Path("/lista")
@@ -105,7 +105,7 @@ public class ClienteController {
       return Response.status(Response.Status.CREATED).entity(service.inserirCliente(clienteDTO)).build();
    }
 
-   @PATCH
+   @PUT
    @Path("")
    @Operation(
       summary = "Atualizar Cliente",
@@ -126,6 +126,42 @@ public class ClienteController {
    public Response atualizarCliente(@RequestBody ClienteDTOupdate clienteUpdate){
       return Response.status(Response.Status.CREATED).entity(service.atualizarCliente(clienteUpdate)).build();
    }
+
+   @DELETE
+   @Path("/{id}")
+   @Operation(
+      summary = "Apagar Cliente",
+      description = "Apaga o cliente com {id} informado")
+   @APIResponse(
+      responseCode = "202", 
+      description = "Cliente Apagado"
+   )
+   public Response deletarCliente(@PathParam("id") Long id){
+      service.excluirCliente(id);
+      return Response.status(Response.Status.ACCEPTED).build();
+   }
+
+   @GET
+   @Path("/{idCliente}/cryptos")
+   @Operation(
+      summary = "Listar Cryptos de um Cliente",
+      description = "Retorna toda a lista de criptomoedas de um cliente com id informado")
+   @APIResponse(
+      responseCode = "200", 
+      description = "Lista de cryptos do cliente recuperada", 
+      content = {
+         @Content(
+            mediaType = "application/json", 
+            schema = @Schema(
+               implementation = Integer.class, 
+               type = SchemaType.ARRAY
+            )
+         )
+      }
+   )
+   public Response buscaCryptoCliente(@PathParam("idCliente") Long idCliente) throws SQLException {
+      return Response.status(Response.Status.OK).entity(ccService.buscaCryptoCliente(idCliente)).build();
+   } 
 
    @POST
    @Path("/compra")

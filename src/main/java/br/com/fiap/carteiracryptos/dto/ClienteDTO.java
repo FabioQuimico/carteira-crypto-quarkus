@@ -3,6 +3,8 @@ package br.com.fiap.carteiracryptos.dto;
 public class ClienteDTO {
    String nome;
 
+   public ClienteDTO() {
+   }
    public ClienteDTO(String nome){
       this.nome = nome;
    }

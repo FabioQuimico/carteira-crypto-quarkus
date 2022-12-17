@@ -36,15 +36,6 @@ import javax.persistence.NamedNativeQueries;
       query="INSERT into clientes(id, nome) VALUES (:id, :nome) ;"
    ),
    @NamedNativeQuery(
-      name="ATUALIZAR_CLIENTE", 
-      query = "UPDATE clientes SET nome = :nomeCliente WHERE id = :id ;"
-      ),
-   @NamedNativeQuery(
-      name = "EXCLUIR_CLIENTE",
-      query = "DELETE clientes where id=:idCliente ;"
-
-      ),
-   @NamedNativeQuery(
       name = "ULTIMO_IDCLIENTE",
       query = "SELECT MAX(id) FROM clientes ;"
    )
@@ -85,15 +76,20 @@ public class Cliente extends PanacheEntity implements Serializable {
    }
 
    public CryptoCliente buscaCrypto(String codigo) {
-      for (CryptoCliente crypto : cryptos) {
-         if (crypto.getCrypto().getCodigo().equalsIgnoreCase(codigo))
-            return crypto;
+      for (CryptoCliente cryptoCliente : cryptos) {
+         if (cryptoCliente.getCodigo().equalsIgnoreCase(codigo))
+            return cryptoCliente;
       }
       return null;
    }
 
+   //TODO: Testar tostring
    @Override
    public String toString() {
-      return ("ID: " +id+ " - Nome: " +nome);
+      String retorno = "ID: " +id+ " - Nome: " +nome+ " Criptos:";
+      for (CryptoCliente crypto : cryptos) {
+         retorno += " " + crypto.getCodigo();
+      }
+      return retorno;
    }
 }

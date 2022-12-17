@@ -15,16 +15,14 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import br.com.fiap.carteiracryptos.dto.CryptoClienteDTO;
 
-// Não pode ser usado PanacheEntity por gerar um ID numérico auto-gerenciado
-// para a regra de negocio é preciso que o cliente só tenha um registro de cada
-// criptomoeda então estes devem ser ID
 @Entity
 @Table(name="crypto_cliente")
+//TODO: Testar e retirar namedQuery
 @NamedNativeQueries({
    @NamedNativeQuery(
       name="BUSCA_CRYPTO_CLIENTE",
-      query="SELECT id, idCliente, codigoCrypto, quantidade FROM crypto_cliente WHERE idCliente = :idCliente ;",
-      resultClass = Crypto.class
+      query="SELECT idCliente, codCrypto, quantidade FROM crypto_cliente WHERE idCliente = :idCliente ;",
+      resultClass = CryptoCliente.class
    )})
 public class CryptoCliente implements Serializable{
    
@@ -35,31 +33,23 @@ public class CryptoCliente implements Serializable{
    Cliente cliente;
 
    @Id
-   @ManyToOne
-   @JoinColumn(name = "codigoCrypto", referencedColumnName = "codigo", nullable = false)
-   Crypto crypto;
+   String codCrypto;
 
    BigDecimal quantidade;
 
    public CryptoCliente(){}
 
-   // public Long getId(){
-   //    return this.id;
-   // }
+   public CryptoCliente(String codigoCrypto, BigDecimal quantidade){
+      this.codCrypto = codigoCrypto;
+      this.quantidade = quantidade;
+   }
+
    public Cliente getCliente() {
       return cliente;
    }
 
    public void setCliente(Cliente cliente) {
       this.cliente = cliente;
-   }
-
-   public Crypto getCrypto() {
-      return crypto;
-   }
-
-   public void setCrypto(Crypto crypto) {
-      this.crypto = crypto;
    }
 
    public BigDecimal getQuantidade() {
@@ -70,9 +60,17 @@ public class CryptoCliente implements Serializable{
       this.quantidade = quantidade;
    };
 
+   public String getCodigo() {
+      return this.codCrypto;
+   }
+
+   public void setCodCrypto(String codCrypto) {
+      this.codCrypto = codCrypto;
+   }
+   
    public CryptoClienteDTO toDTO(){
       CryptoClienteDTO ccDTO = new CryptoClienteDTO();
-      ccDTO.setCodigoCrypto(this.crypto.getCodigo());
+      ccDTO.setCodigoCrypto(this.getCodigo());
       ccDTO.setIdCliente(this.cliente.getId());
       ccDTO.setQuantidade(this.quantidade);
       return ccDTO;
@@ -83,7 +81,7 @@ public class CryptoCliente implements Serializable{
       final int prime = 31;
       int result = 1;
       result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
-      result = prime * result + ((crypto == null) ? 0 : crypto.hashCode());
+      result = prime * result + ((codCrypto == null) ? 0 : codCrypto.hashCode());
       return result;
    }
 
@@ -101,10 +99,10 @@ public class CryptoCliente implements Serializable{
             return false;
       } else if (!cliente.equals(other.cliente))
          return false;
-      if (crypto == null) {
-         if (other.crypto != null)
+      if (codCrypto == null) {
+         if (other.codCrypto != null)
             return false;
-      } else if (!crypto.equals(other.crypto))
+      } else if (!codCrypto.equals(other.codCrypto))
          return false;
       return true;
    }
@@ -113,9 +111,8 @@ public class CryptoCliente implements Serializable{
    public String toString() {
       
       return "Cliente: " + this.cliente.getNome() + 
-            " - Moeda: " + this.crypto.getNome() +
+            " - Moeda: " + this.getCodigo() +
             " - Quantidade: " + this.quantidade;
    }
-
    
 }

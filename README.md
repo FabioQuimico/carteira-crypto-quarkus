@@ -1,5 +1,6 @@
 # Carteira-Cryptos
 
+//TODO: Atualizar todo o Readme
 ## 🎯 Objetivo
 
 Sistema de controle de uma carteira de criptomoedas contendo uma base de clientes, criptomoedas, o registro de posse e a possibilidade de transações de compra e venda.
@@ -35,7 +36,6 @@ Este projeto engloba todo controle e manutenção da base de clientes (simplific
 
 > **_NOTA:_**  Neste profile, o banco de dados utilizado será o H2 e será recriado a cada execução. 
 
-
 ### Profile Produção (PostgreSQL)
 
 1. Com o docker rodando, subir serviço PostgreSQL: 
@@ -44,7 +44,7 @@ Este projeto engloba todo controle e manutenção da base de clientes (simplific
 docker-compose up -d
 ```
 
-2. Executar aplicação quarkus: 
+2. Executar aplicação quarkus:
 
 ```bash
 ./mvnw compile quarkus:dev -Dquarkus.profile=prod
