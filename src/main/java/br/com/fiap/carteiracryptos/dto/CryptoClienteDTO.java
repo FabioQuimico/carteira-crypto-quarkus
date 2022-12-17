@@ -8,6 +8,16 @@ public class CryptoClienteDTO {
    String codigoCrypto;
    BigDecimal quantidade;
    
+   public CryptoClienteDTO(){};
+   
+
+   public CryptoClienteDTO(Long idCliente, String codigoCrypto, BigDecimal quantidade) {
+      this.idCliente = idCliente;
+      this.codigoCrypto = codigoCrypto;
+      this.quantidade = quantidade;
+   }
+
+
    public Long getIdCliente() {
       return idCliente;
    }

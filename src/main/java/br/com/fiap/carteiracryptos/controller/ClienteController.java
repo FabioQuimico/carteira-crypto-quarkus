@@ -1,9 +1,11 @@
 package br.com.fiap.carteiracryptos.controller;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.persistence.Id;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PATCH;
@@ -26,6 +28,8 @@ import br.com.fiap.carteiracryptos.dto.ClienteDTOupdate;
 import br.com.fiap.carteiracryptos.dto.CryptoClienteDTO;
 import br.com.fiap.carteiracryptos.model.Cliente;
 import br.com.fiap.carteiracryptos.service.ClienteService;
+import io.quarkus.panache.common.Sort;
+import io.smallrye.mutiny.Uni;
 
 @RequestScoped
 @Path("/cliente")
@@ -53,7 +57,7 @@ public class ClienteController {
          )
       }
    )
-   public Response listarClientes() {
+   public Response get() {
       return Response.status(Response.Status.OK).entity(service.listarClientes()).build();
    }
 

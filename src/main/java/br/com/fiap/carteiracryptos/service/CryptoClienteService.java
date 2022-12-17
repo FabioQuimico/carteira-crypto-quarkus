@@ -30,13 +30,6 @@ public class CryptoClienteService {
 
    public List<CryptoCliente> buscaCryptoCliente(Long idCliente){
       return repository.find("idCliente", idCliente).list();
-      // Removido para uso de Panache
-      // try {
-      //    return repository.buscaCryptoCliente(idCliente);
-      // } catch (Exception e) {
-      //    System.out.println("*** O cliente não possui cryptos! ***");
-      //    return null;
-      // }
    }
 
    @Transactional
@@ -53,8 +46,7 @@ public class CryptoClienteService {
 
    @Transactional
    public CryptoCliente saveCryptoCliente(CryptoCliente cryptoCliente){
-         repository.persist(cryptoCliente); 
-      // repository.update("quantidade = ?1 where id = ?2", cryptoCliente.getQuantidade(), cryptoCliente.getId()); 
+      repository.persist(cryptoCliente);  
       return cryptoCliente;
    }
 
