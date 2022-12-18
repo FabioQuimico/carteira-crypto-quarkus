@@ -99,8 +99,8 @@ public class ClienteController {
    @APIResponse(responseCode = "200", description = "Lista de cryptos do cliente recuperada", content = {
          @Content(mediaType = "application/json", schema = @Schema(implementation = Integer.class, type = SchemaType.ARRAY))
    })
-   public Response buscaCryptoCliente(@PathParam("idCliente") Long idCliente) throws SQLException {
-      return Response.status(Response.Status.OK).entity(ccService.buscaCryptoCliente(idCliente)).build();
+   public Response buscaCryptoCliente(@PathParam("idCliente") Long idCliente) throws Exception {
+      return Response.status(Response.Status.OK).entity(service.buscarCliente(idCliente).getCriptos()).build();
    }
 
    @POST
