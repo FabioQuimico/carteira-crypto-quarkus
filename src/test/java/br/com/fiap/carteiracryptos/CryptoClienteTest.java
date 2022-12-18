@@ -3,7 +3,6 @@ package br.com.fiap.carteiracryptos;
 import org.junit.jupiter.api.Test;
 
 import br.com.fiap.carteiracryptos.dto.ClienteDTO;
-import br.com.fiap.carteiracryptos.dto.CryptoClienteDTO;
 import br.com.fiap.carteiracryptos.model.Cliente;
 import br.com.fiap.carteiracryptos.service.ClienteService;
 import br.com.fiap.carteiracryptos.service.CryptoClienteService;
@@ -13,7 +12,6 @@ import io.restassured.http.ContentType;
 
 import static io.restassured.RestAssured.given;
 
-import java.math.BigDecimal;
 import java.sql.SQLException;
 
 import javax.inject.Inject;

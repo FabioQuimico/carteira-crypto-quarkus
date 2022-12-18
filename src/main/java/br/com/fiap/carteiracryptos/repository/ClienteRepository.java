@@ -1,9 +1,6 @@
 package br.com.fiap.carteiracryptos.repository;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.enterprise.context.RequestScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
