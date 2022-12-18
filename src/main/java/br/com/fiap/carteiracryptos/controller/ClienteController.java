@@ -51,7 +51,7 @@ public class ClienteController {
    @APIResponse(responseCode = "200", description = "Lista de clientes recuperada", content = {
          @Content(mediaType = "application/json", schema = @Schema(implementation = Cliente.class))
    })
-   public Response get() {
+   public Response get() throws Exception {
       return Response.status(Response.Status.OK).entity(service.listarClientes()).build();
    }
 
@@ -61,7 +61,7 @@ public class ClienteController {
    @APIResponse(responseCode = "302", description = "Cliente recuperado", content = {
          @Content(mediaType = "application/json", schema = @Schema(implementation = Cliente.class))
    })
-   public Response buscarCliente(@PathParam("id") Long id) {
+   public Response buscarCliente(@PathParam("id") Long id) throws Exception {
       return Response.status(Response.Status.FOUND).entity(service.buscarCliente(id)).build();
    }
 

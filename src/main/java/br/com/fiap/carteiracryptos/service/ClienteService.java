@@ -2,11 +2,9 @@ package br.com.fiap.carteiracryptos.service;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -34,24 +32,47 @@ public class ClienteService {
    @Inject
    CotacaoService cService;
 
-   public List<Cliente> listarClientes() {
+   public List<ClienteCotado> listarClientes() throws Exception {
       List<Cliente> lista = repository.findAll().list();
-      return lista;
+      List<ClienteCotado> listaAtualizada = new ArrayList<>();
+      List<CryptoDTO> listaCotacoesAtualizada = atualizaCotacao();
+
+      lista.forEach(cliente -> {
+         ClienteCotado clienteFull = new ClienteCotado(cliente);
+         
+            clienteFull.getCriptos().stream().forEach(c -> {
+               buscaCotacao(c, listaCotacoesAtualizada);
+               clienteFull.add(c);
+            });
+         listaAtualizada.add(clienteFull);
+      });
+      return listaAtualizada;
    }
 
-   public ClienteCotado buscarCliente(Long id) {
+   public ClienteCotado buscarCliente(Long id) throws Exception {
 
       Cliente cliente = repository.find("id", id).singleResult();
       ClienteCotado clienteFull = new ClienteCotado(cliente);
+      List<CryptoDTO> listaAtualizada = atualizaCotacao();
 
       if (cliente != null) {
          clienteFull.getCriptos().stream().forEach(c -> {
-            buscaCotacao(c);
+            buscaCotacao(c, listaAtualizada);
             clienteFull.add(c);
          });
       }
 
       return clienteFull;
+   }
+
+   private List<CryptoDTO> atualizaCotacao() throws Exception {
+      try {
+         List<CryptoDTO> listaAtualizada = cService.getAList();
+         return listaAtualizada;
+      } catch (Exception e) {
+         throw new Exception("O serviço de atualização de cotações de Cryptomoedas está indisponível!" +
+            " Verifique se está online!");
+      }
    }
 
    @Transactional
@@ -132,8 +153,7 @@ public class ClienteService {
    }
 
    // * METODOS ACESSORIOS */
-   Crypto buscaCotacao(Crypto crypto) {
-      List<CryptoDTO> listaAtualizada = cService.getAList();
+   Crypto buscaCotacao(Crypto crypto, List<CryptoDTO> listaAtualizada) {
 
       Optional<CryptoDTO> cryptoDTO = 
          listaAtualizada.stream()
