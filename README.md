@@ -1,6 +1,5 @@
 # Carteira-Cryptos
 
-//TODO: Atualizar todo o Readme
 ## 🎯 Objetivo
 
 Sistema de controle de uma carteira de criptomoedas contendo uma base de clientes, criptomoedas, o registro de posse e a possibilidade de transações de compra e venda.
@@ -20,82 +19,91 @@ Sistema de controle de uma carteira de criptomoedas contendo uma base de cliente
 
 Este projeto engloba todo controle e manutenção da base de clientes (simplificados, com apenas ID e nome), a base de criptomoedas (com os principais dados para as transações) e a carteira em si que é a vinculação de posse de criptomoedas para cada cliente, conforme abaixo:
 
-- **Cliente:** possui identificação númerica(Long) e nome (String)
-- **Crypto:** possui código único(String), nome(String), valor de Compra(double) e valor de Venda(double)
+- **Cliente:** possui identificação númerica(Long), nome (String) e conjunto de criptomoedas possuida
 - **CryptoCliente:** possui a id do Cliente(Long), o código da criptomoeda(String) e a quantidade possuida (BigDecimal)
 
 ## ⚙️ Executando o projeto
 
 ### Profile Desenvolvimento (H2)
 
-1. Executar aplicação quarkus:
+1. Estar com o [sistema de cotação de valores de criptomoedas](https://github.com/AlexDamiao86/trabalho-microservices/tree/main/cotacao-crypto-api) ativo e pronto pra receber requisições.
+
+2. Executar aplicação quarkus:
+
+    2.1. Se tiver o Quarkus localmente
 
 ```bash
-./mvnw compile quarkus:dev
+# quarkus dev
 ```
 
-> **_NOTA:_**  Neste profile, o banco de dados utilizado será o H2 e será recriado a cada execução. 
+  2.2. Se executando direto pelo Maven
+
+```bash
+# ./mvnw compile quarkus:dev
+```
+
+> **_NOTA:_**  Neste profile, o banco de dados utilizado será o H2 já populado com algumas informações e será recriado a cada execução.
 
 ### Profile Produção (PostgreSQL)
 
-1. Com o docker rodando, subir serviço PostgreSQL: 
+1. Com o docker rodando, subir serviço PostgreSQL:
 
 ```bash
-docker-compose up -d
+# docker-compose up -d
 ```
 
 2. Executar aplicação quarkus:
 
 ```bash
-./mvnw compile quarkus:dev -Dquarkus.profile=prod
+# ./mvnw compile quarkus:dev -Dquarkus.profile=prod
 ```
 
 Opcionalmente, poderá ser configurado o pgAdmin (Administração do PostgreSQL) para visualização dos dados persistidos no banco de dados.
 
 - Acessar página web do pgAdmin:
-  * Endereço: http://localhost:16543
-  * Login/Email: pgadmin@email.com
-  * Login/Password: senha
+  - [Aplicação pelo browser](http://localhost:16543)
+  - Login/Email: pgadmin@email.com
+  - Login/Password: senha
 
 - Adicionar novo servidor (Add new Server):
   - (Aba General)
-    * Name: postgres-bd
+    - Name: postgres-bd
   - (Aba Connection)
-    * Host: postgres
-    * Port: 5432
-    * Maintenance database: postgres
-    * Username: postgres
-    * Password: docker
+    - Host: postgres
+    - Port: 5432
+    - Maintenance database: postgres
+    - Username: postgres
+    - Password: docker
 
-- Acessar tabelas: 
-  * No canto lateral esquerdo, clicar sobre Servers > postgres-bd > Databases > carteira-cryptos > Schemas > public > Tables
+- Acessar tabelas:
+  - No canto lateral esquerdo, clicar sobre Servers > postgres-bd > Databases > carteira-cryptos > Schemas > public > Tables
 
-  
 ## 🩺 Testando o projeto
 
 Para facilitar a execução, o banco de dados é alimentado durante a inicialização do projeto com:
 
 - 4 Clientes (1, 2, 3 e 4)
-- 5 Criptomoedas (BTC, ETH, USDT, ADA, USDC)
-- 1 Posse na carteira (Cliente: 1, Criptomoeda: BTC, quanitdade: 10)
+- 3 Posses na carteira (Clientes 1 e 2)
 
-### SWAGGER 
+### SWAGGER
 
-A interface Swagger pode ser acessada em: http://localhost:8080/q/swagger-ui/
+A interface Swagger pode ser acessada no [browser](http://localhost:8080/q/swagger-ui/)
 
 ### Endpoints
 
 #### Entidade CLIENTE
 
-- GET /cliente/lista => Retorna a lista de clientes
+- GET /cliente/ => Retorna a lista de clientes
 - GET /cliente/{id} => Retorna o cliente com o id informado em formato numerico
-- POST /cliente => Salva um novo cliente na base passado por json com o atributo:
+- POST /cliente => Salva um novo cliente na base passado por json
+- PUT /cliente => Altera os dados do cliente com a id informada por json
+- DELETE /cliente/{id} => Exclui o cliente com a id informada
 
   ```json
   "nome": "{String}"
   ```
 
-- PATCH /cliente => Altera o cliente com o id informado por json conforme:
+- PUT /cliente => Altera o cliente com o id informado por json conforme:
 
   ```json
   "id": {Numero},
@@ -118,21 +126,6 @@ A interface Swagger pode ser acessada em: http://localhost:8080/q/swagger-ui/
   "quantidade": {numero decimal}
   ```
 
-#### Entidade CRYPTO
-
-- GET /crypto/lista => Lista todas as criptomoedas disponíveis para compra/venda
-- GET /crypto/{codigo} => Mostra dados da criptomoeda de codigo string informado
-- POST /crypto => Cadastra uma nova criptomoeda com os dados informados por json conforme:
-
-  ```json
-  "codigo": "{String}",
-  "nome": "{String}",
-  "valorCompra": {numero decimal},
-  "vallorVenda": {numero decimal}
-  ```
-
-- DELETE /crypto/{codigo} => Apaga a criptomoeda com {codigo} informado
-
 #### Entidade CRYPTOCLIENTE
 
 - GET /cryptocliente/lista => Lista todas as propriedades de criptomoedas de todos os usuários **APENAS PARA TESTES**
@@ -147,9 +140,9 @@ A interface Swagger pode ser acessada em: http://localhost:8080/q/swagger-ui/
 
 ## 👨🏽‍💻 Desenvolvedores
 
-| [<img src="https://avatars.githubusercontent.com/AlexDamiao86" width=115><br><sub>Alexandre Damião Mendonça Maia</sub>](https://github.com/AlexDamiao86) |  [<img src="https://avatars.githubusercontent.com/FabioQuimico" width=115><br><sub>Fabio Ferreira dos Santos</sub>](https://github.com/FabioQuimico) |  [<img src="https://avatars.githubusercontent.com/Gabriel2503" width=115><br><sub>Gabriel Oliveira Barbosa</sub>](https://github.com/Gabriel2503) | [<img src="https://avatars.githubusercontent.com/ferreirabraga" width=115><br><sub>Rafael Braga da Silva Ferreira</sub>](https://github.com/ferreirabraga) | 
+| [<img src="https://avatars.githubusercontent.com/AlexDamiao86" width=115><br><sub>Alexandre Damião Mendonça Maia</sub>](https://github.com/AlexDamiao86) |  [<img src="https://avatars.githubusercontent.com/FabioQuimico" width=115><br><sub>Fabio Ferreira dos Santos</sub>](https://github.com/FabioQuimico) |  [<img src="https://avatars.githubusercontent.com/Gabriel2503" width=115><br><sub>Gabriel Oliveira Barbosa</sub>](https://github.com/Gabriel2503) | [<img src="https://avatars.githubusercontent.com/ferreirabraga" width=115><br><sub>Rafael Braga da Silva Ferreira</sub>](https://github.com/ferreirabraga) |
 | :---: | :---: | :---: | :---: |
 
 >
->Projeto realizado como requisito para conclusão da disciplina de _Quarkus_ do MBA Full Stack Development - FIAP 2022
+>Projeto realizado como requisito parcial do MBA Full Stack Development - FIAP 2022
 >

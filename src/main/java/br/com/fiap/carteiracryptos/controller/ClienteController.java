@@ -22,7 +22,6 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.enums.SchemaType;
 
-import br.com.fiap.carteiracryptos.dto.ClienteCotado;
 import br.com.fiap.carteiracryptos.dto.ClienteDTO;
 import br.com.fiap.carteiracryptos.dto.ClienteDTOupdate;
 import br.com.fiap.carteiracryptos.dto.CryptoClienteDTO;
@@ -46,7 +45,7 @@ public class ClienteController {
    CryptoClienteService ccService;
 
    @GET
-   @Path("/lista")
+   @Path("")
    @Operation(summary = "Listar Clientes", description = "Retorna toda a lista de clientes")
    @APIResponse(responseCode = "200", description = "Lista de clientes recuperada", content = {
          @Content(mediaType = "application/json", schema = @Schema(implementation = Cliente.class))
@@ -124,15 +123,15 @@ public class ClienteController {
       return Response.status(Response.Status.ACCEPTED).entity(service.vendeCrypto(cryptoClienteDTO)).build();
    }
 
-   @GET
-   @Path("/test")
-   public Response cotacao(){
-      return Response.status(Response.Status.ACCEPTED).entity(cService.getAList()).build();
-   }
+   // @GET
+   // @Path("/test")
+   // public Response cotacao(){
+   //    return Response.status(Response.Status.ACCEPTED).entity(cService.getAList()).build();
+   // }
 
-   @GET
-   @Path("/test/{codigo}")
-   public Response cotacaoCodigo(@PathParam("codigo") String codigo){
-      return Response.status(Response.Status.ACCEPTED).entity(cService.geCryptoDTO(codigo)).build();
-   }
+   // @GET
+   // @Path("/test/{codigo}")
+   // public Response cotacaoCodigo(@PathParam("codigo") String codigo){
+   //    return Response.status(Response.Status.ACCEPTED).entity(cService.geCryptoDTO(codigo)).build();
+   // }
 }

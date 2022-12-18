@@ -86,7 +86,6 @@ public class Cliente extends PanacheEntity implements Serializable {
       return null;
    }
 
-   //TODO: Testar tostring
    @Override
    public String toString() {
       String retorno = "ID: " +id+ " - Nome: " +nome+ " Criptos:";

@@ -17,7 +17,6 @@ import br.com.fiap.carteiracryptos.dto.CryptoClienteDTO;
 
 @Entity
 @Table(name="crypto_cliente")
-//TODO: Testar e retirar namedQuery
 @NamedNativeQueries({
    @NamedNativeQuery(
       name="BUSCA_CRYPTO_CLIENTE",
