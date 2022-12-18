@@ -100,7 +100,7 @@ public class ClienteController {
          @Content(mediaType = "application/json", schema = @Schema(implementation = Integer.class, type = SchemaType.ARRAY))
    })
    public Response buscaCryptoCliente(@PathParam("idCliente") Long idCliente) throws SQLException {
-      return Response.status(Response.Status.OK).entity(ccService.buscaCryptoCliente(idCliente)).build();
+      return Response.status(Response.Status.OK).entity(service.buscarCliente(idCliente).getCriptos()).build();
    }
 
    @POST
