@@ -24,22 +24,22 @@ Este projeto engloba todo controle e manutenção da base de clientes (simplific
 
 ## ⚙️ Executando o projeto
 
+Observação: Esse serviço possui a interdependência do Microserviço [cotacao-crypto-api](https://github.com/AlexDamiao86/trabalho-microservices/tree/main/cotacao-crypto-api). Devido a isso, esse serviço deve ser executado antes do projeto atual. Seguir as instruções de execução contidas no README do [projeto](https://github.com/AlexDamiao86/trabalho-microservices/tree/main/cotacao-crypto-api).
+
 ### Profile Desenvolvimento (H2)
 
-1. Estar com o [sistema de cotação de valores de criptomoedas](https://github.com/AlexDamiao86/trabalho-microservices/tree/main/cotacao-crypto-api) ativo e pronto pra receber requisições.
+1. Executar aplicação quarkus:
 
-2. Executar aplicação quarkus:
-
-    2.1. Se tiver o Quarkus localmente
+1.1. Usando quarkus
 
 ```bash
-# quarkus dev
+quarkus dev
 ```
 
-  2.2. Se executando direto pelo Maven
+1.2. Usando Maven
 
 ```bash
-# ./mvnw compile quarkus:dev
+./mvnw compile quarkus:dev
 ```
 
 > **_NOTA:_**  Neste profile, o banco de dados utilizado será o H2 já populado com algumas informações e será recriado a cada execução.
@@ -49,13 +49,13 @@ Este projeto engloba todo controle e manutenção da base de clientes (simplific
 1. Com o docker rodando, subir serviço PostgreSQL:
 
 ```bash
-# docker-compose up -d
+docker-compose up -d
 ```
 
 2. Executar aplicação quarkus:
 
 ```bash
-# ./mvnw compile quarkus:dev -Dquarkus.profile=prod
+./mvnw compile quarkus:dev -Dquarkus.profile=prod
 ```
 
 Opcionalmente, poderá ser configurado o pgAdmin (Administração do PostgreSQL) para visualização dos dados persistidos no banco de dados.
