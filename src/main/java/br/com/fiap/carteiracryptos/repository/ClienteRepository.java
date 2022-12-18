@@ -22,19 +22,6 @@ public class ClienteRepository implements PanacheRepository<Cliente>{
    @PersistenceContext
    EntityManager em;
 
-   public List<Cliente> listarClientes() throws SQLException {
-
-      TypedQuery<Cliente> query = em.createNamedQuery("LISTAR_CLIENTES", Cliente.class);
-
-      try {
-         return query.getResultList();
-      } catch (NoResultException e) {
-         return new ArrayList<Cliente>();
-      } catch (PersistenceException e) {
-         throw new SQLException(e);
-      }
-   }
-
    public Cliente buscarCliente(Long id) throws SQLException{
       TypedQuery<Cliente> query = em.createNamedQuery("BUSCAR_CLIENTE", Cliente.class);
 

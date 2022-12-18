@@ -24,7 +24,7 @@ import br.com.fiap.carteiracryptos.dto.CryptoClienteDTO;
       query="SELECT idCliente, codCrypto, quantidade FROM crypto_cliente WHERE idCliente = :idCliente ;",
       resultClass = CryptoCliente.class
    )})
-public class CryptoCliente implements Serializable{
+public class CryptoCliente implements Serializable {
    
    @Id
    @JsonBackReference
@@ -33,14 +33,14 @@ public class CryptoCliente implements Serializable{
    Cliente cliente;
 
    @Id
-   String codCrypto;
+   String codigoCrypto;
 
    BigDecimal quantidade;
 
    public CryptoCliente(){}
 
    public CryptoCliente(String codigoCrypto, BigDecimal quantidade){
-      this.codCrypto = codigoCrypto;
+      this.codigoCrypto = codigoCrypto;
       this.quantidade = quantidade;
    }
 
@@ -61,11 +61,11 @@ public class CryptoCliente implements Serializable{
    };
 
    public String getCodigo() {
-      return this.codCrypto;
+      return this.codigoCrypto;
    }
 
    public void setCodCrypto(String codCrypto) {
-      this.codCrypto = codCrypto;
+      this.codigoCrypto = codCrypto;
    }
    
    public CryptoClienteDTO toDTO(){
@@ -81,7 +81,7 @@ public class CryptoCliente implements Serializable{
       final int prime = 31;
       int result = 1;
       result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
-      result = prime * result + ((codCrypto == null) ? 0 : codCrypto.hashCode());
+      result = prime * result + ((codigoCrypto == null) ? 0 : codigoCrypto.hashCode());
       return result;
    }
 
@@ -99,10 +99,10 @@ public class CryptoCliente implements Serializable{
             return false;
       } else if (!cliente.equals(other.cliente))
          return false;
-      if (codCrypto == null) {
-         if (other.codCrypto != null)
+      if (codigoCrypto == null) {
+         if (other.codigoCrypto != null)
             return false;
-      } else if (!codCrypto.equals(other.codCrypto))
+      } else if (!codigoCrypto.equals(other.codigoCrypto))
          return false;
       return true;
    }

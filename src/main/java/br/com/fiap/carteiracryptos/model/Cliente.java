@@ -74,6 +74,9 @@ public class Cliente extends PanacheEntity implements Serializable {
    public void setNome(String nome) {
       this.nome = nome;
    }
+   public Set<CryptoCliente> getCryptos(){
+      return this.cryptos;
+   }
 
    public CryptoCliente buscaCrypto(String codigo) {
       for (CryptoCliente cryptoCliente : cryptos) {
