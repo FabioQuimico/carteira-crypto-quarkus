@@ -29,7 +29,7 @@ public class ClienteControllerTest {
          .body("{\"nome\": \"Alexandre\"}")
          .post("/cliente");
       when()
-         .get("/cliente/lista")
+         .get("/cliente/")
          .then().statusCode(200).assertThat().body("size()", is(1))
          .body(containsString("\"nome\":\"Alexandre\""));
    }
