@@ -26,6 +26,8 @@ Este projeto engloba todo controle e manutenção da base de clientes (simplific
 
 Observação: Esse serviço possui a interdependência do Microserviço [cotacao-crypto-api](https://github.com/AlexDamiao86/trabalho-microservices/tree/main/cotacao-crypto-api). Devido a isso, esse serviço deve ser executado antes do projeto atual. Seguir as instruções de execução contidas no README do [projeto](https://github.com/AlexDamiao86/trabalho-microservices/tree/main/cotacao-crypto-api).
 
+> **_ATENÇÃO_**: Renomear o arquivo .env.localhost para .env antes de prosseguir com os procedimentos a seguir:
+
 ### Profile Desenvolvimento (H2)
 
 1. Executar aplicação quarkus:
