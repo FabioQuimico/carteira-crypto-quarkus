@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  mysqldb:
+    image: mysql:8.0.30
+    container_name: mysqldb
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+      - MYSQL_DATABASE=$MYSQLDB_DATABASE
+    ports:
+      - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
+    volumes:
+      - db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 6
+
+  cotacao-crypto:
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    image: alexdamiao86/cotacao-crypto-api:1.1.0
+    container_name: cotacao-crypto
+    ports:
+      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+    environment:
+      - MYSQLDB_HOST=$MYSQLDB_HOST
+      - MYSQLDB_USER=$MYSQLDB_USER
+      - MYSQLDB_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+      - MYSQLDB_DATABASE=$MYSQLDB_DATABASE
+      - MYSQLDB_DOCKER_PORT=$MYSQLDB_DOCKER_PORT
+    stdin_open: true
+    tty: true
+
+volumes:
+  db:
+
+

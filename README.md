@@ -19,26 +19,30 @@ Sistema de controle de uma carteira de criptomoedas contendo uma base de cliente
 
 Este projeto engloba todo controle e manutenção da base de clientes (simplificados, com apenas ID e nome), a base de criptomoedas (com os principais dados para as transações) e a carteira em si que é a vinculação de posse de criptomoedas para cada cliente, conforme abaixo:
 
-- **Cliente:** possui identificação númerica(Long), nome (String) e conjunto de criptomoedas possuida
-- **CryptoCliente:** possui a id do Cliente(Long), o código da criptomoeda(String) e a quantidade possuida (BigDecimal)
+- **Cliente:** possui identificação numérica(Long), nome (String) e conjunto de criptomoedas possuída
+- **CryptoCliente:** possui a id do Cliente(Long), o código da criptomoeda(String) e a quantidade possuída (BigDecimal)
 
 ## ⚙️ Executando o projeto
 
-Observação: Esse serviço possui a interdependência do Microserviço [cotacao-crypto-api](https://github.com/AlexDamiao86/trabalho-microservices/tree/main/cotacao-crypto-api). Devido a isso, esse serviço deve ser executado antes do projeto atual. Seguir as instruções de execução contidas no README do [projeto](https://github.com/AlexDamiao86/trabalho-microservices/tree/main/cotacao-crypto-api).
+### Profile Desenvolvimento (H2)
 
 > **_ATENÇÃO_**: Renomear o arquivo .env.localhost para .env antes de prosseguir com os procedimentos a seguir:
 
-### Profile Desenvolvimento (H2)
+1. Com o Docker rodando, subir microserviço [cotacao-crypto-api](https://github.com/AlexDamiao86/trabalho-microservices/tree/main/cotacao-crypto-api):
 
-1. Executar aplicação quarkus:
+```bash
+docker-compose -f docker-compose-cotacao.yml up -d --remove-orphans
+```
 
-1.1. Usando quarkus
+2. Executar aplicação quarkus:
+
+2.1. Usando quarkus
 
 ```bash
 quarkus dev
 ```
 
-1.2. Usando Maven
+2.2. Usando Maven
 
 ```bash
 ./mvnw compile quarkus:dev
@@ -48,16 +52,12 @@ quarkus dev
 
 ### Profile Produção (PostgreSQL)
 
-1. Com o docker rodando, subir serviço PostgreSQL:
+> **_ATENÇÃO_**: Renomear o arquivo .env.docker para .env antes de prosseguir com os procedimentos a seguir:
+
+1. Com o Docker rodando, subir aplicação, aplicação [cotacao-crypto-api](https://github.com/AlexDamiao86/trabalho-microservices/tree/main/cotacao-crypto-api), bancos de dados MySQL e Postgres. 
 
 ```bash
 docker-compose up -d
-```
-
-2. Executar aplicação quarkus:
-
-```bash
-./mvnw compile quarkus:dev -Dquarkus.profile=prod
 ```
 
 Opcionalmente, poderá ser configurado o pgAdmin (Administração do PostgreSQL) para visualização dos dados persistidos no banco de dados.
@@ -82,7 +82,7 @@ Opcionalmente, poderá ser configurado o pgAdmin (Administração do PostgreSQL)
 
 ## 🩺 Testando o projeto
 
-Para facilitar a execução, o banco de dados é alimentado durante a inicialização do projeto com:
+Para facilitar a execução em profile Desenvolvimento, o banco de dados é alimentado durante a inicialização do projeto com:
 
 - 4 Clientes (1, 2, 3 e 4)
 - 3 Posses na carteira (Clientes 1 e 2)
@@ -98,22 +98,20 @@ A interface Swagger pode ser acessada no [browser](http://localhost:8080/q/swagg
 - GET /cliente/ => Retorna a lista de clientes
 - GET /cliente/{id} => Retorna o cliente com o id informado em formato numerico
 - POST /cliente => Salva um novo cliente na base passado por json
-- PUT /cliente => Altera os dados do cliente com a id informada por json
-- DELETE /cliente/{id} => Exclui o cliente com a id informada
-
   ```json
   "nome": "{String}"
   ```
-
+  
+- DELETE /cliente/{id} => Exclui o cliente com a id informada
 - PUT /cliente => Altera o cliente com o id informado por json conforme:
-
   ```json
   "id": {Numero},
   "nome": "{String}"
   ```
 
-- POST /cliente/compra => Registra a compra da criptomoeda com {codigoCrypto} informado para o cliente de {idCliente} na {quantidade} passada por json conforme:
+#### Entidade CRYPTO_CLIENTE
 
+- POST /cliente/compra => Registra a compra da criptomoeda com {codigoCrypto} informado para o cliente de {idCliente} na {quantidade} passada por json conforme:
   ```json
   "idCliente": {numero},
   "codigoCrypto": "{String}",
@@ -121,24 +119,13 @@ A interface Swagger pode ser acessada no [browser](http://localhost:8080/q/swagg
   ```
 
 - POST /cliente/venda => Efetua a venda da criptomoeda com {codigoCrypto} para o cliente de {idCliente} na {quantidade} passada por json conforme:
-
   ```json
   "idCliente": {numero},
   "codigoCrypto": "{String}",
   "quantidade": {numero decimal}
   ```
-
-#### Entidade CRYPTOCLIENTE
-
-- GET /cryptocliente/lista => Lista todas as propriedades de criptomoedas de todos os usuários **APENAS PARA TESTES**
-- GET /cryptocliente/{idCliente} => Lista todas as criptomoedas possuidas pelo cliente de {idCliente} numerico
-- POST /cryptocliente => Cria uma nova posse de criptomoeda com os dados passados por json conforme:
-
-  ```json
-  "idCliente": {numero},
-  "codigoCrypto": "{String}",
-  "quantidade": {numero decimal}
-  ```
+  
+- GET /cliente/{idCliente}/cryptos => Lista todas as criptomoedas possuidas pelo cliente de {idCliente} numerico
 
 ## 👨🏽‍💻 Desenvolvedores
 
